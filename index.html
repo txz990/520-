@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>520表白小惊喜</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #fff0f5;
+      overflow: hidden;
+      font-family: 'Arial', sans-serif;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+      .message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;              
+  font-size: 1.2em;              
+  line-height: 1.8em;
+  color: #e91e63;
+  z-index: 2;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  width: 80vw;
+  max-width: 400px;                  
+    }
+    .input-box {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+    }
+    .input-box input {
+      font-size: 1em;
+      padding: 8px;
+      border-radius: 10px;
+      border: none;
+    }
+    .input-box button {
+      font-size: 1em;
+      padding: 8px 12px;
+      margin-left: 5px;
+      border-radius: 10px;
+      background-color: #e91e63;
+      color: white;
+      border: none;
+    }
+    .message pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 1.6em;
+  line-height: 1.6;
+}
+
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <div class="message" id="message">
+    <pre>世界上最浪漫的事，就是每天醒来身边有你。
+我们一起走过的日子，是我最珍贵的记忆。
+爱你，不止今天，也不止520，而是未来的每一个日子。
+愿你被这世间温柔以待，也愿我一直是那个温柔的人。</pre>
+  </div>
+
+<!--   <div class="input-box">
+    <input type="text" id="wishInput" placeholder="输入你的表白内容">
+    <button onclick="changeMessage()">更新祝福</button>
+  </div> -->
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const hearts = [];
+    function createHeart() {
+      return {
+        x: Math.random() * canvas.width,
+        y: -20,
+        size: Math.random() * 20 + 10,
+        color: `hsl(${Math.random()*360}, 100%, 70%)`,
+        speed: Math.random() * 2 + 1
+      };
+    }
+
+    function drawHeart(x, y, size, color) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(size / 30, size / 30);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(0, -10, -15, -10, -15, 0);
+      ctx.bezierCurveTo(-15, 10, 0, 15, 0, 25);
+      ctx.bezierCurveTo(0, 15, 15, 10, 15, 0);
+      ctx.bezierCurveTo(15, -10, 0, -10, 0, 0);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (Math.random() < 0.3) hearts.push(createHeart());
+      for (let i = 0; i < hearts.length; i++) {
+        const h = hearts[i];
+        h.y += h.speed;
+        drawHeart(h.x, h.y, h.size, h.color);
+      }
+      for (let i = hearts.length - 1; i >= 0; i--) {
+        if (hearts[i].y > canvas.height) hearts.splice(i, 1);
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    function changeMessage() {
+      const input = document.getElementById("wishInput").value;
+      if (input.trim()) {
+        document.getElementById("message").textContent = input.trim();
+      }
+    }
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // 初始化加载保存的内容
+// window.addEventListener("load", () => {
+//   const saved = localStorage.getItem("wishMessage");
+//   if (saved) {
+//     document.getElementById("message").textContent = saved;
+//     document.getElementById("wishInput").value = saved;
+//   }
+// });
+
+// function changeMessage() {
+//   const input = document.getElementById("wishInput").value;
+//   if (input.trim()) {
+//     document.getElementById("message").textContent = input.trim();
+//     localStorage.setItem("wishMessage", input.trim()); // 保存到localStorage
+//   }
+// }
+
+  </script>
+</body>
+</html>
